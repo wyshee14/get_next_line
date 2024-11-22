@@ -6,7 +6,7 @@
 /*   By: wshee <wshee@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 17:49:44 by wshee             #+#    #+#             */
-/*   Updated: 2024/11/22 15:21:20 by wshee            ###   ########.fr       */
+/*   Updated: 2024/11/22 19:03:04 by wshee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ char	*ft_nextline(char *buffer)
 	i = 0;
 	while (buffer[i] != '\0' && buffer[i] != '\n')
 		i++;
-	printf("%s\n", buffer);
-	if (buffer[i] == '\0')
+	//printf("%s\n", buffer);
+	if (buffer[i] != '\0')
 	{
 		free (buffer); //Free old buffer, remove the content before \n
 		return (NULL);
@@ -46,10 +46,10 @@ char	*ft_nextline(char *buffer)
 	return(line); //Return remaining content
 }
 
-//extracts the first line including \n from the buffer
-//go through buffer to find \n or \0
-//allocate memory for line
-//copy line content into new string
+// //extracts the first line including \n from the buffer
+// //go through buffer to find \n or \0
+// //allocate memory for line
+// //copy line content into new string
 char *ft_extractline(char *buffer)
 {
 	int	i;
@@ -83,7 +83,7 @@ char *ft_joinstring(char *newbuffer, char *buffer)
 
 	new = ft_strjoin(newbuffer, buffer);
 	free(newbuffer);
-	newbuffer = NULL;
+	//newbuffer = NULL;
 	return (new);
 }
 
@@ -96,54 +96,63 @@ char *read_file(int fd, char *buffer)
 	char	*tempbuf;
 
 	if (!buffer)//initialize buffer as an empty string
-		buffer = ft_strdup("");
-	tempbuf = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char)); //Allocate buffer for buf in fd
+	{
+		ft_strdup("");
+	}
+	//tempbuf = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char)); //Allocate buffer for buf in fd
+	tempbuf = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
 	if (!tempbuf)
 		return (NULL);
 	nbyte_read = 1; //initialize bytes to run below function, contain garbage data if uninitialized
-	while (nbyte_read > 0)
+	while (!ft_strchr(tempbuf, '\n') && nbyte_read > 0)
 	{
 		nbyte_read = read(fd, tempbuf, BUFFER_SIZE); //return the number of bytes read
+		//printf("%d\n", nbyte_read);
 		if (nbyte_read == -1) //happens when the file is close or error(-1) or
 		{
 			free(tempbuf);
 			return (NULL);
 		}
-		if (nbyte_read == 0)
-		{
-			free(tempbuf);
-			// break ;
-			return (NULL);
-		}
+		// if (nbyte_read == 0)
+		// {
+		// 	free(tempbuf);
+		// 	//break ;
+		// 	return (NULL);
+		// }
 		tempbuf[nbyte_read] = '\0'; //end with null teminator
-		buffer = ft_joinstring(buffer, tempbuf);
-		if (ft_strchr(tempbuf, '\n'))
-			break ;
+		buffer = ft_joinstring(buffer, tempbuf); //overwrite buffer into new buffer after join
+		// if (ft_strchr(tempbuf, '\n'))
+		// 	break ;
 	}
 	free(tempbuf);
 	return (buffer);
 }
 
-//check fd is valid
+//check fd is valid, handle errors
+//read and update buffer
 //free buffer after line is read
+//extract the line end with new line
+//remove processed line, keep unread content
+//return extracted line
 char	*get_next_line(int fd)
 {
 	static char	*buffer;//initial state would be null
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0) //Handle errors
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 		return (NULL);
-	buffer = read_file(fd, buffer); //read and update buffer
+	buffer = read_file(fd, buffer);
+	//printf("%s\n", buffer);
 	if (!buffer)
 		return (NULL);
-	line = ft_extractline(buffer); //extract the next line
-	char	*newbuffer = ft_nextline(buffer);
-	if (newbuffer)
-		buffer = newbuffer;
-	else
-		buffer = NULL;
-	//buffer = ft_nextline(buffer); //remove processed line, keep unread content
-	return (line); //return extracted line
+	line = ft_extractline(buffer);
+	// char	*newbuffer = ft_nextline(buffer);
+	// if (newbuffer)
+	// 	buffer = newbuffer;
+	// else
+	// 	buffer = NULL;
+	buffer = ft_nextline(buffer);
+	return (line);
 }
 
 //buffer is a section of memory that temperarily stores data that is being transferred from one place to another.

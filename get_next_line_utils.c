@@ -6,7 +6,7 @@
 /*   By: wshee <wshee@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:37:25 by wshee             #+#    #+#             */
-/*   Updated: 2024/11/22 14:16:02 by wshee            ###   ########.fr       */
+/*   Updated: 2024/11/22 18:58:25 by wshee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ size_t	ft_strlen(const char *s)
 	int	counter;
 
 	counter = 0;
+	if (s == NULL)
+		return (0);
 	while (s[counter] != 0)
 	{
 		counter++;
@@ -110,4 +112,31 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 	}
 
 	return (dst_len + src_len);
+}
+
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	unsigned char	*ptr;
+	int i = 0;
+
+	if (nmemb == 0 || size == 0)
+	{
+		ptr = malloc(0);
+		if (!ptr)
+			return (NULL);
+		return (ptr);
+	}
+	if (nmemb > 4294967295 / size)
+		return (NULL);
+	ptr = (void *)malloc (nmemb * size);
+	if (ptr == NULL)
+		return (NULL);
+	int n = nmemb * size;
+	while (n > 0)
+	{
+		ptr[i] = 0;
+		n--;
+		i++;
+	}
+	return (ptr);
 }
