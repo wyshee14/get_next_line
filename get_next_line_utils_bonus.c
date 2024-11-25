@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wshee <wshee@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/20 15:37:25 by wshee             #+#    #+#             */
-/*   Updated: 2024/11/25 15:06:16 by wshee            ###   ########.fr       */
+/*   Created: 2024/11/25 13:50:48 by wshee             #+#    #+#             */
+/*   Updated: 2024/11/25 14:02:41 by wshee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_strchr(const char *s, int c)
 {
@@ -71,8 +71,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 void	*ft_calloc(size_t nmemb, size_t size)
 {
 	unsigned char	*ptr;
-	size_t			i;
-	size_t			n;
+	int				i;
+	int				n;
 
 	i = 0;
 	if (nmemb == 0 || size == 0)

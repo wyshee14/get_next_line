@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wshee <wshee@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/24 13:28:33 by wshee             #+#    #+#             */
-/*   Updated: 2024/11/25 15:05:46 by wshee            ###   ########.fr       */
+/*   Created: 2024/11/25 12:28:42 by wshee             #+#    #+#             */
+/*   Updated: 2024/11/25 15:04:58 by wshee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 //get the line inside buffer after the new line
 //Free old buffer, remove the content before \n
@@ -118,53 +118,68 @@ char	*read_file(int fd, char *buffer)
 //return extracted line
 char	*get_next_line(int fd)
 {
-	static char	*buffer = NULL;
+	static char	*buffer[1024];
 	char		*line;
 
 	if (fd < 0 || read(fd, 0, 0) < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	buffer = read_file(fd, buffer);
-	if (buffer == NULL)
+	buffer[fd] = read_file(fd, buffer[fd]);
+	if (buffer[fd] == NULL)
 		return (NULL);
-	line = make_line(buffer);
-	buffer = next_line(buffer);
+	line = make_line(buffer[fd]);
+	buffer[fd] = next_line(buffer[fd]);
 	return (line);
 }
 
-//buffer is a section of memory that temperarily stores data
-//that is being transferred from one place to another.
-//static char acts as a persistent storage for unread data from the fd
-//allow to resume reading from where it left off
-//char is local variable with single call only, ends when the function call ends
-//if there is no file, print error
-//continue call get next line until the line reach NULL (EOF)
-//must free line, prevent memory leak
+//run command ulimit -n will get the soft limit
+//can be cahnged anytime for non-root user in the
+//range of [0-hard limit], to disable core dumps
+//buffer array can read up to 1024 files
+// run command ulimit -Hn will get hard limit
+//can only be raised by root(for security)
 
-// #include <stdio.h>
+// # include <stdio.h>
+// # include <unistd.h>
 // # include <fcntl.h>
 
 // int main(void)
 // {
-// 	int		fd;
-// 	char	*line;
-// 	int i;
+// 	int		fd1;
+// 	int		fd2;
+// 	int		fd3;
+// 	int		i;
+// 	char	*res1;
+// 	char	*res2;
+// 	char	*res3;
 
-// 	fd = open("test1.txt", O_RDONLY);
-// 	if (fd < 0)
+// 	fd1 = open("test1.txt", O_RDONLY);
+// 	fd2 = open("test2.txt", O_RDONLY);
+// 	fd3 = open("test3.txt", O_RDONLY);
+// 	if (fd1 < 0 || fd2 < 0 || fd3 < 0)
 // 	{
 // 		printf("Error\n");
 // 		return (1);
 // 	}
-// 	line = get_next_line(fd);
+// 	res1 = get_next_line(fd1);
+// 	res2 = get_next_line(fd2);
+// 	res3 = get_next_line(fd3);
 // 	i = 0;
-// 	while (i < 10)
+// 	while ((res1 != NULL || res2 != NULL || res3 != NULL) && i < 7)
 // 	{
-// 		printf("%s",line);
-// 		free(line);
-// 		line = get_next_line(fd);
+// 		printf("test1[line %d]: %s", i, res1);
+// 		printf("test2[line %d]: %s", i, res2);
+// 		printf("test3[line %d]: %s", i, res3);
+// 		free(res1);
+// 		free(res2);
+// 		free(res3);
+// 		res1 = get_next_line(fd1);
+// 		res2 = get_next_line(fd2);
+// 		res3 = get_next_line(fd3);
+// 		printf("\n");
 // 		i++;
 // 	}
-// 	free(line);
-// 	close(fd);
+// 	close(fd1);
+// 	close(fd2);
+// 	close(fd3);
 // 	return (0);
 // }
