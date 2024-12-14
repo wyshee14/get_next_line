@@ -6,7 +6,7 @@
 /*   By: wshee <wshee@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:59:31 by wshee             #+#    #+#             */
-/*   Updated: 2024/11/25 14:28:17 by wshee            ###   ########.fr       */
+/*   Updated: 2024/11/26 10:23:20 by wshee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 10000000
+#  define BUFFER_SIZE 42
 # endif
 
 # include <stddef.h>

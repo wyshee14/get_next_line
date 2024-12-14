@@ -6,7 +6,7 @@
 /*   By: wshee <wshee@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:37:25 by wshee             #+#    #+#             */
-/*   Updated: 2024/11/25 15:06:16 by wshee            ###   ########.fr       */
+/*   Updated: 2024/12/13 13:48:12 by wshee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	*ft_calloc(size_t nmemb, size_t size)
 			return (NULL);
 		return (ptr);
 	}
-	if (nmemb > 4294967295 / size)
+	if (nmemb > (size_t)-1 / size)
 		return (NULL);
 	ptr = (void *)malloc (nmemb * size);
 	if (ptr == NULL)

@@ -6,7 +6,7 @@
 /*   By: wshee <wshee@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 13:50:48 by wshee             #+#    #+#             */
-/*   Updated: 2024/11/25 14:02:41 by wshee            ###   ########.fr       */
+/*   Updated: 2024/12/13 14:12:19 by wshee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 void	*ft_calloc(size_t nmemb, size_t size)
 {
 	unsigned char	*ptr;
-	int				i;
-	int				n;
+	size_t			i;
+	size_t			n;
 
 	i = 0;
 	if (nmemb == 0 || size == 0)
@@ -82,7 +82,7 @@ void	*ft_calloc(size_t nmemb, size_t size)
 			return (NULL);
 		return (ptr);
 	}
-	if (nmemb > 4294967295 / size)
+	if (nmemb > (size_t)-1 / size)
 		return (NULL);
 	ptr = (void *)malloc (nmemb * size);
 	if (ptr == NULL)

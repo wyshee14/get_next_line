@@ -6,7 +6,7 @@
 /*   By: wshee <wshee@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 13:28:33 by wshee             #+#    #+#             */
-/*   Updated: 2024/11/25 15:05:46 by wshee            ###   ########.fr       */
+/*   Updated: 2024/12/12 15:55:09 by wshee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,7 @@ char	*next_line(char *buffer)
 	}
 	line = ft_substr(buffer, i + 1, ft_strlen(buffer) - i);
 	if (line == NULL)
-	{
-		free(line);
 		return (NULL);
-	}
 	free (buffer);
 	return (line);
 }
@@ -86,21 +83,23 @@ char	*ft_join(char *oldbuffer, char *tempbuf)
 char	*read_file(int fd, char *buffer)
 {
 	char	*tempbuf;
-	int		byte_read;
+	ssize_t	byte_read;
 
 	if (buffer == NULL)
+	{
 		buffer = ft_calloc(1, 1);
+	}
 	tempbuf = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (tempbuf == NULL)
 		return (NULL);
-	tempbuf[0] = 0;
 	byte_read = 1;
-	while (!ft_strchr(tempbuf, '\n') && byte_read > 0)
+	while (!ft_strchr(buffer, '\n') && byte_read > 0)
 	{
 		byte_read = read(fd, tempbuf, BUFFER_SIZE);
 		if (byte_read == -1)
 		{
 			free(tempbuf);
+			free(buffer);
 			return (NULL);
 		}
 		tempbuf[byte_read] = '\0';
@@ -118,10 +117,10 @@ char	*read_file(int fd, char *buffer)
 //return extracted line
 char	*get_next_line(int fd)
 {
-	static char	*buffer = NULL;
+	static char	*buffer;
 	char		*line;
 
-	if (fd < 0 || read(fd, 0, 0) < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	buffer = read_file(fd, buffer);
 	if (buffer == NULL)
@@ -147,9 +146,9 @@ char	*get_next_line(int fd)
 // {
 // 	int		fd;
 // 	char	*line;
-// 	int i;
+// 	int		i;
 
-// 	fd = open("test1.txt", O_RDONLY);
+// 	fd = open("test.txt", O_RDONLY);
 // 	if (fd < 0)
 // 	{
 // 		printf("Error\n");
